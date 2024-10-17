@@ -13,27 +13,28 @@ window.addEventListener('beforeinstallprompt', (event) => {
 butInstall?.addEventListener('click', async () => {
     const promptEvent = window.deferredPrompt;
 
-    if (!promptEvent) {
-        return;
-    }
+    if (!promptEvent) return;
 
     try {
-    // Show prompt
-    promptEvent.prompt();
+        // Show the install prompt
+        promptEvent.prompt();
 
-    // Reset the deferred prompt variable (can only be used once)
-    window.deferredPrompt = null;
+        // Wait for user action on the prompt
+        const result = await promptEvent.userChoice;
+        console.log('User response to install prompt:', result);
 
-    // Re-engage hidden class on install button
-    butInstall?.classList.toggle('hidden', true);
+        // Clear the deferred prompt as it can only be used once
+        window.deferredPrompt = null;
     } catch (error) {
-        console.error('Failed to prompt install', error)
+        console.error('Failed to prompt install', error);
     }
 });
 
 // Handler for the `appinstalled` event
 window.addEventListener('appinstalled', (event) => {
-    console.log('PWA installed successfully!');
-    // Clear prompt
+    console.log('PWA installed successfully!', event);
+    // Clear prompt and hide the install button
     window.deferredPrompt = null;
+    butInstall?.classList.toggle('hidden', true);
 });
+
