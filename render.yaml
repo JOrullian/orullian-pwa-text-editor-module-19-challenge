@@ -1,0 +1,5 @@
+services:
+  - type: web
+    name: text-editor
+    env: static
+    staticPublishPath: dist
